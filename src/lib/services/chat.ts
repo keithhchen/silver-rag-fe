@@ -129,7 +129,8 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
 
                             case 'message':
                                 const messageEvent = data as MessageEvent;
-                                if (messageEvent.answer) {
+                                if (messageEvent.answer && messageEvent.answer.length > 0) {
+                                    console.log(messageEvent.answer)
                                     onMessage({
                                         content: messageEvent.answer,
                                         role: "assistant",

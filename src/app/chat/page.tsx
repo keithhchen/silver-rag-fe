@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowUp } from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
 
 interface Message {
@@ -16,6 +16,15 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +99,7 @@ export default function ChatPage() {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="border-t p-4 sticky bottom-0 bg-background">
@@ -97,12 +107,16 @@ export default function ChatPage() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="开始提问..."
             disabled={isLoading}
-            className="flex-1"
+            className="flex-1 shadow-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send"}
+          <Button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="rounded-full"
+          >
+            <ArrowUp className="h-5 w-5" />
           </Button>
         </form>
       </div>
