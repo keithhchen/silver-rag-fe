@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { API_ENDPOINTS } from "@/lib/api-config";
+import { apiRequest } from "@/lib/api-middleware";
 
 interface UserState {
   accessToken: string | null;
@@ -55,24 +56,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       if (!state.accessToken) return;
 
       try {
-        const response = await fetch(API_ENDPOINTS.USERS.PROFILE, {
-          headers: {
-            Authorization: `Bearer ${state.accessToken}`,
-          },
+        const data = await apiRequest<{
+          username: string;
+          uuid: string;
+          role: string;
+        }>(API_ENDPOINTS.USERS.PROFILE, {
+          requiresAuth: true,
         });
 
-        if (!response.ok) {
-          if (response.status === 400) {
-            logout();
-            const currentPath =
-              window.location.pathname + window.location.search;
-            router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
-            return;
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
         setState({
           accessToken: state.accessToken,
           username: data.username,

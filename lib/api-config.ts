@@ -92,14 +92,8 @@ export const API_ENDPOINTS = {
 export const API_CONFIG = {
     headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
     getAuthHeaders: (token: string) => ({
         'Authorization': `Bearer ${token}`,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     }),
 } as const;

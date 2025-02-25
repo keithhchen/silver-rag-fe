@@ -12,6 +12,7 @@ import {
   API_CONFIG,
   type LoginResponse,
 } from "@/lib/api-config";
+import { apiRequest } from "@/lib/api-middleware";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,18 +29,13 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(API_ENDPOINTS.USERS.LOGIN, {
+      const data = await apiRequest<LoginResponse>(API_ENDPOINTS.USERS.LOGIN, {
         method: "POST",
         headers: API_CONFIG.headers,
         body: JSON.stringify({ username, password }),
       });
 
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
-
-      const data = (await response.json()) as LoginResponse;
-      login(data.access_token, data.role, data.username, data.uuid);
+      login(data.access_token, data.username, data.uuid, data.role);
       const searchParams = new URLSearchParams(window.location.search);
       const redirectPath = searchParams.get("redirect") || "/";
       router.push(redirectPath);

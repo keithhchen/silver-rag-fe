@@ -29,8 +29,9 @@ export async function apiRequest<T>(
             },
         });
 
+
         // Handle 401 Unauthorized or 400 Bad Request
-        if (response.status === 401 || response.status === 400) {
+        if (response.status === 400) {
             // Store the current path for redirect after login
             const currentPath = typeof window !== 'undefined'
                 ? window.location.pathname + window.location.search
