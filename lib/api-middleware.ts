@@ -25,6 +25,7 @@ export async function apiRequest<T>(
             headers: {
                 ...headers,
                 ...(config.headers || {}),
+                'Origin': typeof window !== 'undefined' ? window.location.origin : '',
             },
         });
 

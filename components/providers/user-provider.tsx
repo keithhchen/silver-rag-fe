@@ -64,7 +64,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         if (!response.ok) {
           if (response.status === 400) {
             logout();
-            router.push("/login");
+            const currentPath =
+              window.location.pathname + window.location.search;
+            router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
+            return;
           }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -78,6 +81,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         });
       } catch (error) {
         console.error("Error validating token:", error);
+        logout();
+        router.push("/login");
       }
     };
 
