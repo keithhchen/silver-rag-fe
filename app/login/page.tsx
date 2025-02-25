@@ -40,7 +40,9 @@ export default function LoginPage() {
 
       const data = (await response.json()) as LoginResponse;
       login(data.access_token, data.role, data.username, data.uuid);
-      router.push("/");
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectPath = searchParams.get("redirect") || "/";
+      router.push(redirectPath);
     } catch (err) {
       console.error(err);
       setError("Failed to login. Please check your credentials.");
