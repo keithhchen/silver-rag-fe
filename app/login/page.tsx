@@ -39,7 +39,7 @@ export default function LoginPage() {
       }
 
       const data = (await response.json()) as LoginResponse;
-      login(data.access_token, data.username, data.uuid);
+      login(data.access_token, data.role, data.username, data.uuid);
       router.push("/");
     } catch (err) {
       console.error(err);

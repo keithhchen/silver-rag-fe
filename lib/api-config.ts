@@ -41,6 +41,7 @@ export interface LoginResponse {
     access_token: string;
     username: string;
     uuid: string;
+    role: string;
 }
 
 export interface CreateUserRequest {
