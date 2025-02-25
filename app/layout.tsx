@@ -1,6 +1,8 @@
 "use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
+import { LanguageProvider } from "@/components/providers/language-provider";
+import { TopBar } from "@/components/layout/top-bar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,7 +25,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <LanguageProvider>
+          <TopBar />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

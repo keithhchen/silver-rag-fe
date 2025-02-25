@@ -1,0 +1,19 @@
+{
+  "app.title": "CEIBS Silver Economy GPT",
+  "app.description": "Your AI-powered knowledge base",
+  "nav.home": "Home",
+  "nav.documents": "Documents",
+  "nav.chat": "Chat",
+  "nav.settings": "Settings",
+  "button.upload": "Upload",
+  "button.start": "Start",
+  "button.cancel": "Cancel",
+  "button.confirm": "Confirm",
+  "button.save": "Save",
+  "button.delete": "Delete",
+  "settings.language": "Language",
+  "settings.theme": "Theme",
+  "settings.dark": "Dark",
+  "settings.light": "Light",
+  "settings.system": "System"
+}

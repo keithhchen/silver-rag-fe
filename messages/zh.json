@@ -1,0 +1,19 @@
+{
+  "app.title": "中欧银发经济 AI 知识库",
+  "app.description": "基于海量行业知识",
+  "nav.home": "首页",
+  "nav.documents": "文档",
+  "nav.chat": "对话",
+  "nav.settings": "设置",
+  "button.upload": "上传",
+  "button.start": "开始",
+  "button.cancel": "取消",
+  "button.confirm": "确认",
+  "button.save": "保存",
+  "button.delete": "删除",
+  "settings.language": "语言",
+  "settings.theme": "主题",
+  "settings.dark": "深色",
+  "settings.light": "浅色",
+  "settings.system": "系统"
+}

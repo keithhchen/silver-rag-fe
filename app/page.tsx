@@ -1,24 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useIntl } from "react-intl";
 
 export default function Home() {
-  const [data, setData] = useState({ stargazers_count: 0, forks_count: 0 });
-
-  useEffect(() => {
-    fetch("https://api.github.com/repos/vercel/next.js")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  const intl = useIntl();
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <div className="text-center sm:text-left">
-          <h1 className="text-2xl font-bold mb-2">Next.js GitHub Stats</h1>
+          <h1 className="text-2xl font-bold mb-2">
+            {intl.formatMessage({ id: "app.title" })}
+          </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Stars: {data.stargazers_count} | Forks: {data.forks_count}
+            {intl.formatMessage({ id: "app.description" })}
           </p>
         </div>
         <Image
