@@ -32,6 +32,7 @@ export default function RootLayout({
             new CustomEvent("updateUser", { detail: user })
           );
         } catch (error) {
+          console.error(error);
           localStorage.removeItem("token");
           router.push("/login");
         }
@@ -39,7 +40,7 @@ export default function RootLayout({
     };
 
     checkAuth();
-  }, [pathname]);
+  }, [pathname, router]);
 
   return (
     <html lang="zh" className={GeistSans.className}>
