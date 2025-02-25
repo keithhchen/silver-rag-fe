@@ -19,7 +19,15 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+    if (messagesEndRef.current) {
+      const currentScroll = messagesEndRef.current.offsetTop;
+      window.scrollTo({ top: currentScroll - 200, behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
@@ -47,7 +55,7 @@ export default function ChatPage() {
                 ...lastMessage,
                 content: lastMessage.isLoading
                   ? message.content
-                  : lastMessage.content + message.content,
+                  : lastMessage.content + (message.content ?? ""),
                 isLoading: false,
               };
               return [...prev.slice(0, -1), updatedMessage];
