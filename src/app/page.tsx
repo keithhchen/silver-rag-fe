@@ -2,12 +2,24 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/lib/context/UserContext";
 
 export default function Home() {
   const [count, setCount] = useState(0);
+  const { user } = useUser();
 
   return (
     <div className="grid grid-rows-[60px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="row-start-1 w-full flex justify-end px-4">
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">Welcome, {user.username}</span>
+            <span className="text-xs text-gray-500">({user.role})</span>
+          </div>
+        ) : (
+          <span className="text-sm text-gray-500">Not logged in</span>
+        )}
+      </div>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
           className=""

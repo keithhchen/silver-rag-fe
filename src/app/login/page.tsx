@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/lib/context/UserContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { login } from "@/lib/services/auth";
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { setUser } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -24,7 +26,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(formData);
+      const user = await login(formData);
+      setUser(user);
       router.push("/");
     } catch (error: any) {
       toast({
