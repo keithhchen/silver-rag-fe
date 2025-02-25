@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, ArrowUp } from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
+import ReactMarkdown from "react-markdown";
+import styles from "./markdown.module.css";
 
 interface Message {
   content: string;
@@ -91,7 +93,7 @@ export default function ChatPage() {
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-lg p-4 ${
+              className={`max-w-[80%] rounded-lg p-4 text-sm ${
                 message.role === "user"
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted"
@@ -99,10 +101,14 @@ export default function ChatPage() {
             >
               {message.isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
+              ) : message.role === "user" ? (
+                <div className="whitespace-pre-wrap">{message.content}</div>
               ) : (
-                <p className="whitespace-pre-wrap break-words">
-                  {message.content}
-                </p>
+                <div className="prose prose-invert max-w-none">
+                  <div className={styles.markdown}>
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                </div>
               )}
             </div>
           </div>
