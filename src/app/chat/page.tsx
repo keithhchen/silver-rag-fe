@@ -7,11 +7,18 @@ import { Loader2, ArrowUp } from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
 import ReactMarkdown from "react-markdown";
 import styles from "./markdown.module.css";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Message {
   content: string;
   role: string;
   isLoading?: boolean;
+  retriever_resources?: any[];
 }
 
 export default function ChatPage() {
@@ -59,6 +66,7 @@ export default function ChatPage() {
                   ? message.content
                   : lastMessage.content + (message.content ?? ""),
                 isLoading: false,
+                retriever_resources: message.retriever_resources ?? [],
               };
               return [...prev.slice(0, -1), updatedMessage];
             } else {
@@ -110,6 +118,28 @@ export default function ChatPage() {
                   </div>
                 </div>
               )}
+              {message.retriever_resources &&
+                message.retriever_resources?.length > 0 && (
+                  <div className="mt-4">
+                    <div className="text-xs font-medium text-gray-500 mb-2">
+                      引用文档
+                    </div>
+                    <Accordion type="single" collapsible className="w-full">
+                      {message.retriever_resources?.map((resource, i) => (
+                        <AccordionItem key={i} value={`item-${i}`}>
+                          <AccordionTrigger className="text-sm font-medium hover:no-underline">
+                            {resource.document_name}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="text-sm text-gray-500">
+                              {resource.content}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                )}
             </div>
           </div>
         ))}

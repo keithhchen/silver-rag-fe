@@ -4,6 +4,7 @@ interface ChatMessage {
     content: string;
     role: string;
     isLoading?: boolean;
+    retriever_resources?: RetrieverResource[];
 }
 
 interface Usage {
@@ -13,10 +14,14 @@ interface Usage {
 }
 
 interface RetrieverResource {
-    id: string;
-    content: string;
-    source: string;
+    position: number;
+    dataset_id: string;
+    dataset_name: string;
+    document_id: string;
+    document_name: string;
     score: number;
+    content: string;
+    segment_id: string;
 }
 
 interface MessageEndEvent {
@@ -159,6 +164,13 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
                                 return;
 
                             case 'message_end':
+                                const messageEndEvent = data as MessageEndEvent;
+                                onMessage({
+                                    content: "",
+                                    role: "assistant",
+                                    isLoading: false,
+                                    retriever_resources: messageEndEvent?.metadata?.retriever_resources || []
+                                })
                                 break;
 
                             default:
