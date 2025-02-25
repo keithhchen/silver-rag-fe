@@ -10,7 +10,6 @@ import {
 import { useUser } from "@/lib/context/UserContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { translate } from "@/lib/i18n";
 
 export function TopBar() {
   const { user, setUser } = useUser();
@@ -54,7 +53,7 @@ export function TopBar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={handleLogout}>
-                    {translate("login.logout")}
+                    退出
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
