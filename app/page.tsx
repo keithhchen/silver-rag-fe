@@ -1,9 +1,22 @@
 import Image from "next/image";
 
-export default function Home() {
+async function getData() {
+  const res = await fetch("https://api.github.com/repos/vercel/next.js");
+  return res.json();
+}
+
+export default async function Home() {
+  const data = await getData();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <div className="text-center sm:text-left">
+          <h1 className="text-2xl font-bold mb-2">Next.js GitHub Stats</h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Stars: {data.stargazers_count} | Forks: {data.forks_count}
+          </p>
+        </div>
         <Image
           className="dark:invert"
           src="/next.svg"
@@ -16,7 +29,7 @@ export default function Home() {
           <li className="mb-2">
             Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
+              app/page.tsx
             </code>
             .
           </li>
