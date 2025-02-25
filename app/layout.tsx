@@ -2,6 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import { LanguageProvider } from "@/components/providers/language-provider";
+import { UserProvider } from "@/components/providers/user-provider";
 import { TopBar } from "@/components/layout/top-bar";
 import "./globals.css";
 
@@ -26,8 +27,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LanguageProvider>
-          <TopBar />
-          {children}
+          <UserProvider>
+            <TopBar />
+            {children}
+          </UserProvider>
         </LanguageProvider>
       </body>
     </html>

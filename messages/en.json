@@ -15,5 +15,11 @@
   "settings.theme": "Theme",
   "settings.dark": "Dark",
   "settings.light": "Light",
-  "settings.system": "System"
+  "settings.system": "System",
+  "auth.signIn": "Sign In",
+  "auth.signOut": "Sign Out",
+  "auth.username": "Username",
+  "auth.password": "Password",
+  "auth.error": "Failed to login. Please check your credentials.",
+  "auth.signingIn": "Signing in..."
 }

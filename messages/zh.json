@@ -15,5 +15,11 @@
   "settings.theme": "主题",
   "settings.dark": "深色",
   "settings.light": "浅色",
-  "settings.system": "系统"
+  "settings.system": "系统",
+  "auth.signIn": "登录",
+  "auth.signOut": "退出",
+  "auth.username": "用户名",
+  "auth.password": "密码",
+  "auth.error": "登录失败，请检查您的用户名和密码。",
+  "auth.signingIn": "正在登录..."
 }
