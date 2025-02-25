@@ -25,6 +25,13 @@ export interface Document {
 export interface User {
     username: string;
     uuid: string;
+    role: string;
+}
+
+export interface UserProfileResponse {
+    username: string;
+    uuid: string;
+    role: string;
 }
 
 export interface LoginRequest {
@@ -73,6 +80,7 @@ export const API_ENDPOINTS = {
         CREATE: `${API_BASE_URL}/users`,
         LOGIN: `${API_BASE_URL}/users/login`,
         CHANGE_PASSWORD: `${API_BASE_URL}/users/change-password`,
+        PROFILE: `${API_BASE_URL}/users/profile`,
     },
 
     // Chat endpoints

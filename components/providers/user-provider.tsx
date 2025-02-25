@@ -1,15 +1,23 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { API_ENDPOINTS } from "@/lib/api-config";
 
 interface UserState {
   accessToken: string | null;
   username: string | null;
   uuid: string | null;
+  role: string | null;
 }
 
 interface UserContextType extends UserState {
-  login: (accessToken: string, username: string, uuid: string) => void;
+  login: (
+    accessToken: string,
+    username: string,
+    uuid: string,
+    role: string
+  ) => void;
   logout: () => void;
 }
 
@@ -17,11 +25,13 @@ const initialState: UserState = {
   accessToken: null,
   username: null,
   uuid: null,
+  role: null,
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [state, setState] = useState<UserState>(() => {
     if (typeof window === "undefined") return initialState;
 
@@ -40,11 +50,51 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }, [state]);
 
-  const login = (accessToken: string, username: string, uuid: string) => {
+  useEffect(() => {
+    const validateToken = async () => {
+      if (!state.accessToken) return;
+
+      try {
+        const response = await fetch(API_ENDPOINTS.USERS.PROFILE, {
+          headers: {
+            Authorization: `Bearer ${state.accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 400) {
+            logout();
+            router.push("/login");
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setState({
+          accessToken: state.accessToken,
+          username: data.username,
+          uuid: data.uuid,
+          role: data.role,
+        });
+      } catch (error) {
+        console.error("Error validating token:", error);
+      }
+    };
+
+    validateToken();
+  }, [state.accessToken, router]);
+
+  const login = (
+    accessToken: string,
+    username: string,
+    uuid: string,
+    role: string
+  ) => {
     setState({
       accessToken,
       username,
       uuid,
+      role,
     });
   };
 
