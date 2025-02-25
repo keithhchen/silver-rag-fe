@@ -1,12 +1,16 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
-async function getData() {
-  const res = await fetch("https://api.github.com/repos/vercel/next.js");
-  return res.json();
-}
+export default function Home() {
+  const [data, setData] = useState({ stargazers_count: 0, forks_count: 0 });
 
-export default async function Home() {
-  const data = await getData();
+  useEffect(() => {
+    fetch("https://api.github.com/repos/vercel/next.js")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
