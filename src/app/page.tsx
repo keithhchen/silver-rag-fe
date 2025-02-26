@@ -10,7 +10,8 @@ export default function Home() {
 
   return (
     <div className="grid grid-rows-[60px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="row-start-1 w-full flex justify-end px-4">
+      欢迎使用
+      {/* <div className="row-start-1 w-full flex justify-end px-4">
         {user ? (
           <div className="flex items-center gap-2">
             <span className="text-sm">Welcome, {user.username}</span>
@@ -19,8 +20,8 @@ export default function Home() {
         ) : (
           <span className="text-sm text-gray-500">Not logged in</span>
         )}
-      </div>
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      </div> */}
+      {/* <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
           className=""
           src="/next.svg"
@@ -120,7 +121,7 @@ export default function Home() {
           />
           访问 nextjs.org →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

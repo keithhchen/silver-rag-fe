@@ -53,6 +53,12 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
+      // Add initial loading message
+      setMessages((prev) => [
+        ...prev,
+        { content: "", role: "assistant", isLoading: true },
+      ]);
+
       await streamMessages(
         { query: input },
         (message) => {
@@ -65,13 +71,14 @@ export default function ChatPage() {
                 content: lastMessage.isLoading
                   ? message.content
                   : lastMessage.content + (message.content ?? ""),
-                isLoading: false,
+                isLoading:
+                  message.content === null || message.content === undefined,
                 retriever_resources: message.retriever_resources ?? [],
               };
               return [...prev.slice(0, -1), updatedMessage];
             } else {
               // Add new assistant message
-              return [...prev, message];
+              return [...prev, { ...message, isLoading: true }];
             }
           });
         },
