@@ -3,7 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, ArrowUp, SquareArrowOutUpRight } from "lucide-react";
+import {
+  Loader2,
+  ArrowUp,
+  SquareArrowOutUpRight,
+  Sparkles,
+} from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
 import ReactMarkdown from "react-markdown";
 import styles from "./markdown.module.css";
@@ -98,74 +103,88 @@ export default function ChatPage() {
     <div id="chat" className="flex flex-col bg-background">
       <div
         id="messages"
-        className="flex-1 overflow-y-auto p-6 space-y-4 min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]"
+        className={`flex-1 overflow-y-auto p-6 space-y-4 min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)] ${
+          messages.length === 0 ? "flex justify-center items-center" : ""
+        }`}
       >
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-[80%] text-sm ${
-                message.role === "user"
-                  ? "bg-primary rounded-lg text-primary-foreground p-4"
-                  : "bg-transparent p-2"
-              }`}
-            >
-              {message.isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : message.role === "user" ? (
-                <div className="whitespace-pre-wrap">{message.content}</div>
-              ) : (
-                <div className="prose prose-invert max-w-none">
-                  <div className={styles.markdown}>
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
-                  </div>
-                </div>
-              )}
-              {message.retriever_resources &&
-                message.retriever_resources?.length > 0 && (
-                  <div className="mt-4">
-                    <div className="text-xs font-medium text-gray-500 mb-2">
-                      引用文档
-                    </div>
-                    <Accordion type="single" collapsible className="w-full">
-                      {message.retriever_resources?.map((resource, i) => (
-                        <AccordionItem key={i} value={`item-${i}`}>
-                          <AccordionTrigger className="text-sm font-medium hover:no-underline">
-                            {resource.document_name}
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="text-sm text-gray-500">
-                              {resource.content}
-                              <div className="mt-2">
-                                <Button
-                                  variant="link"
-                                  size="sm"
-                                  asChild
-                                  className="text-xs p-0"
-                                >
-                                  <a
-                                    href={`/documents/single?dify_document_id=${resource.document_id}`}
-                                    target="_blank"
-                                  >
-                                    <span className="pr-1">前往查看</span>
-                                    <SquareArrowOutUpRight className="h-3 w-3" />
-                                  </a>
-                                </Button>
-                              </div>
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </div>
-                )}
+        {messages.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <h3 className="text-lg font-medium mb-2 flex items-center justify-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                开启聊天
+              </h3>
+              <p className="text-sm">所有回答基于海量行业知识文档</p>
             </div>
           </div>
-        ))}
+        ) : (
+          messages.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-[80%] text-sm ${
+                  message.role === "user"
+                    ? "bg-primary rounded-lg text-primary-foreground p-4"
+                    : "bg-transparent p-2"
+                }`}
+              >
+                {message.isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : message.role === "user" ? (
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                ) : (
+                  <div className="prose prose-invert max-w-none">
+                    <div className={styles.markdown}>
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    </div>
+                  </div>
+                )}
+                {message.retriever_resources &&
+                  message.retriever_resources?.length > 0 && (
+                    <div className="mt-4">
+                      <div className="text-xs font-medium text-gray-500 mb-2">
+                        引用文档
+                      </div>
+                      <Accordion type="single" collapsible className="w-full">
+                        {message.retriever_resources?.map((resource, i) => (
+                          <AccordionItem key={i} value={`item-${i}`}>
+                            <AccordionTrigger className="text-sm font-medium hover:no-underline">
+                              {resource.document_name}
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="text-sm text-gray-500">
+                                {resource.content}
+                                <div className="mt-2">
+                                  <Button
+                                    variant="link"
+                                    size="sm"
+                                    asChild
+                                    className="text-xs p-0"
+                                  >
+                                    <a
+                                      href={`/documents/single?dify_document_id=${resource.document_id}`}
+                                      target="_blank"
+                                    >
+                                      <span className="pr-1">前往查看</span>
+                                      <SquareArrowOutUpRight className="h-3 w-3" />
+                                    </a>
+                                  </Button>
+                                </div>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </div>
+                  )}
+              </div>
+            </div>
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
 
