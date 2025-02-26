@@ -15,6 +15,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { setUser } = useUser();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -54,9 +55,14 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     <>
       {shouldShowLayout && (
         <>
-          <TopBar />
-          <Sidebar />
-          <main className="pl-48">{children}</main>
+          <TopBar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+          <main className="md:pl-48 transition-[padding] duration-200">
+            {children}
+          </main>
         </>
       )}
       {!shouldShowLayout && children}

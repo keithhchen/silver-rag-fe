@@ -10,8 +10,13 @@ import {
 import { useUser } from "@/lib/context/UserContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Menu } from "lucide-react";
 
-export function TopBar() {
+interface TopBarProps {
+  onMenuClick: () => void;
+}
+
+export function TopBar({ onMenuClick }: TopBarProps) {
   const { user, setUser } = useUser();
   const router = useRouter();
 
@@ -26,11 +31,18 @@ export function TopBar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
+        <Button
+          variant="ghost"
+          className="mr-2 px-2 md:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        <div className="mr-4 flex">
           <Link className="mr-6 flex items-center space-x-2" href="/">
-            <span className="hidden font-bold sm:inline-block">
+            <span className="font-bold inline-block">
               中欧银发经济 AI 知识库
             </span>
           </Link>
