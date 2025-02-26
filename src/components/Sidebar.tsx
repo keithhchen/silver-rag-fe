@@ -42,7 +42,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           !isOpen && "-translate-x-full"
         )}
       >
-        <div className="flex h-full flex-col items-start py-4 gap-4 px-4">
+        <div className="flex h-full flex-col items-start py-4 gap-4 px-4 select-none">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
