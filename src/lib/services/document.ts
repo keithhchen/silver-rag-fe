@@ -21,7 +21,7 @@ export interface PaginatedDocumentResponse {
 
 export async function getDocuments(page: number = 1, page_size: number = 10): Promise<PaginatedDocumentResponse> {
     try {
-        const response = await api.get<PaginatedDocumentResponse>(`/documents?page=${page}&page_size=${page_size}`);
+        const response = await api.get<PaginatedDocumentResponse>(`/documents/list?page=${page}&page_size=${page_size}`);
         return response.data;
     } catch (error: any) {
         if (error.response) {
