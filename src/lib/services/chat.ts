@@ -132,6 +132,7 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
 
                             case 'message':
                                 const messageEvent = data as MessageEvent;
+                                console.log(messageEvent.answer)
                                 if (messageEvent.answer && messageEvent.answer.length > 0) {
                                     onMessage({
                                         content: messageEvent.answer,
@@ -163,8 +164,9 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
 
                             case 'message_end':
                                 const messageEndEvent = data as MessageEndEvent;
+                                console.log(messageEndEvent)
                                 onMessage({
-                                    content: "",
+                                    content: " ",
                                     role: "assistant",
                                     isLoading: false,
                                     retriever_resources: messageEndEvent?.metadata?.retriever_resources || []

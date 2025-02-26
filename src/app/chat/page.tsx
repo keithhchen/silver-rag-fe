@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, ArrowUp } from "lucide-react";
+import { Loader2, ArrowUp, SquareArrowOutUpRight } from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
 import ReactMarkdown from "react-markdown";
 import styles from "./markdown.module.css";
@@ -68,17 +68,14 @@ export default function ChatPage() {
               // Update existing assistant message with concatenated content
               const updatedMessage = {
                 ...lastMessage,
-                content: lastMessage.isLoading
-                  ? message.content
-                  : lastMessage.content + (message.content ?? ""),
-                isLoading:
-                  message.content === null || message.content === undefined,
+                content: getUpdatedContent(lastMessage, message.content),
+                isLoading: false,
                 retriever_resources: message.retriever_resources ?? [],
               };
               return [...prev.slice(0, -1), updatedMessage];
             } else {
               // Add new assistant message
-              return [...prev, { ...message, isLoading: true }];
+              return [...prev, { ...message, isLoading: false }];
             }
           });
         },
@@ -98,8 +95,11 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div id="chat" className="flex flex-col bg-background">
+      <div
+        id="messages"
+        className="flex-1 overflow-y-auto p-6 space-y-4 min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]"
+      >
         {messages.map((message, index) => (
           <div
             key={index}
@@ -108,10 +108,10 @@ export default function ChatPage() {
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-lg p-4 text-sm ${
+              className={`max-w-[80%] text-sm ${
                 message.role === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
+                  ? "bg-primary rounded-lg text-primary-foreground p-4"
+                  : "bg-transparent p-2"
               }`}
             >
               {message.isLoading ? (
@@ -142,15 +142,17 @@ export default function ChatPage() {
                               {resource.content}
                               <div className="mt-2">
                                 <Button
-                                  variant="outline"
+                                  variant="link"
                                   size="sm"
                                   asChild
-                                  className="text-xs"
+                                  className="text-xs p-0"
                                 >
                                   <a
                                     href={`/documents/single?dify_document_id=${resource.document_id}`}
+                                    target="_blank"
                                   >
-                                    前往查看
+                                    <span className="pr-1">前往查看</span>
+                                    <SquareArrowOutUpRight className="h-3 w-3" />
                                   </a>
                                 </Button>
                               </div>
@@ -167,8 +169,11 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t p-4 sticky bottom-0 bg-background">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+      <div className="flex p-4 border-t sticky bottom-0 bg-background h-[4.5rem]">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full items-center gap-2"
+        >
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -179,7 +184,7 @@ export default function ChatPage() {
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="rounded-full"
+            className="transition rounded-full h-8 w-8 p-0 duration-300"
           >
             <ArrowUp className="h-5 w-5" />
           </Button>
@@ -188,3 +193,18 @@ export default function ChatPage() {
     </div>
   );
 }
+
+const getUpdatedContent = (
+  lastMessage: Message,
+  newContent: string | undefined
+): string => {
+  // If the message is still loading, use the new content
+  if (lastMessage.isLoading) {
+    return newContent || "";
+  }
+
+  // If not loading, append the new content to existing content
+  const existingContent = lastMessage.content || "";
+  const contentToAdd = newContent || "";
+  return existingContent + contentToAdd;
+};

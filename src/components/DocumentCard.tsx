@@ -36,23 +36,23 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   return (
     <Card className="flex flex-col">
-      <CardHeader>
+      <CardHeader className="p-4">
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-muted-foreground" />
-          <CardTitle className="text-xl truncate">
+          <CardTitle className="text-lg truncate">
             {document.filename}
           </CardTitle>
         </div>
-        <CardDescription>
+        <CardDescription className="text-xs">
           {format(new Date(document.created_at), "yyyy-MM-dd")}
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="flex-grow p-4">
         <p className="text-sm text-gray-500 truncate">
           {document.markdown_content}
         </p>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2">
+      <CardFooter className="flex flex-col space-y-2 p-4">
         <div className="flex justify-between w-full">
           <Button
             variant="outline"

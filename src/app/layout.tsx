@@ -56,7 +56,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         <>
           <TopBar />
           <Sidebar />
-          <div className="pl-52">{children}</div>
+          <main className="pl-48">{children}</main>
         </>
       )}
       {!shouldShowLayout && children}
