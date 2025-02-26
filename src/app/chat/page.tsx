@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { streamMessages } from "@/lib/services/chat";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import styles from "./markdown.module.css";
 import {
   Accordion,
@@ -139,7 +140,9 @@ export default function ChatPage() {
                 ) : (
                   <div className="prose prose-invert max-w-none">
                     <div className={styles.markdown}>
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {message.content}
+                      </ReactMarkdown>
                     </div>
                   </div>
                 )}
