@@ -1,5 +1,3 @@
-import api from "../api";
-
 interface ChatMessage {
     content: string;
     role: string;
@@ -57,15 +55,15 @@ interface ErrorEvent {
     message: string;
 }
 
-interface WorkflowStartedEvent {
-    task_id: string;
-    workflow_run_id: string;
-}
+// interface WorkflowStartedEvent {
+//     task_id: string;
+//     workflow_run_id: string;
+// }
 
-interface WorkflowFinishedEvent {
-    task_id: string;
-    workflow_run_id: string;
-}
+// interface WorkflowFinishedEvent {
+//     task_id: string;
+//     workflow_run_id: string;
+// }
 
 interface ChatRequest {
     query: string;
