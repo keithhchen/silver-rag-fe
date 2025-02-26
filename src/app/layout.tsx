@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { UserProvider, useUser } from "@/lib/context/UserContext";
 import { TopBar } from "@/components/TopBar";
+import { Sidebar } from "@/components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
 import { getProfile } from "@/lib/services/auth";
 import { useEffect, useState } from "react";
@@ -39,7 +40,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, [pathname, router, setUser]);
 
-  const shouldShowTopBar = pathname !== "/login";
+  const shouldShowLayout = pathname !== "/login";
 
   if (isLoading) {
     return (
@@ -51,8 +52,14 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {shouldShowTopBar && <TopBar />}
-      {children}
+      {shouldShowLayout && (
+        <>
+          <TopBar />
+          <Sidebar />
+          <div className="pl-52">{children}</div>
+        </>
+      )}
+      {!shouldShowLayout && children}
       <Toaster />
     </>
   );

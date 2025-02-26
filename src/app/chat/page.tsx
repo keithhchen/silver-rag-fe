@@ -133,6 +133,20 @@ export default function ChatPage() {
                           <AccordionContent>
                             <div className="text-sm text-gray-500">
                               {resource.content}
+                              <div className="mt-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  asChild
+                                  className="text-xs"
+                                >
+                                  <a
+                                    href={`/documents/single?dify_document_id=${resource.document_id}`}
+                                  >
+                                    前往查看
+                                  </a>
+                                </Button>
+                              </div>
                             </div>
                           </AccordionContent>
                         </AccordionItem>
