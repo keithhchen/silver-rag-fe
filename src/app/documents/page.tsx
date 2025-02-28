@@ -1,26 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { FileText, Trash2, Upload } from "lucide-react";
-import { format } from "date-fns";
+
+import { FileText, Trash2, Upload, Check } from "lucide-react";
 import { DocumentUploadResponse } from "@/lib/services/document";
 import { DocumentCard } from "@/components/DocumentCard";
 
-import {
-  getDocuments,
-  deleteDocument,
-  openDocumentInNewWindow,
-  uploadDocument,
-} from "@/lib/services/document";
+import { getDocuments, uploadDocument } from "@/lib/services/document";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -30,6 +17,7 @@ export default function DocumentsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const pageSize = 10;
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -68,26 +56,54 @@ export default function DocumentsPage() {
 
     setIsUploading(true);
     setUploadProgress(0);
+    const toastResult = toast({
+      title: `上传文件：${file.name}`,
+      description: (
+        <div className="w-full">
+          <Progress value={0} className="w-full" />
+        </div>
+      ),
+      duration: Infinity,
+    });
 
     try {
-      // Simulate upload progress
+      let progress = 0;
       const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => Math.min(prev + 10, 90));
+        progress = Math.min(progress + Math.floor(Math.random() * 10) + 1, 90);
+        setUploadProgress(progress);
+        toastResult.update({
+          title: `上传文件：${file.name}`,
+          description: (
+            <div className="w-full">
+              <Progress value={progress} className="w-full" />
+            </div>
+          ),
+        });
       }, 500);
 
       await uploadDocument(file);
       clearInterval(progressInterval);
       setUploadProgress(100);
-
-      toast({
-        title: "成功",
-        description: "文件上传成功",
+      toastResult.update({
+        title: "上传成功",
+        description: (
+          <div className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-green-500" />
+            {file.name}
+          </div>
+        ),
+        duration: 1000,
       });
+
+      // Clear the file input using ref
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
 
       // Refresh the document list
       await fetchDocuments();
     } catch (error: any) {
-      toast({
+      toastResult.update({
         title: "错误",
         description: error.message || "文件上传失败",
         variant: "destructive",
@@ -109,6 +125,7 @@ export default function DocumentsPage() {
             onChange={handleFileUpload}
             className="hidden"
             id="file-upload"
+            ref={fileInputRef}
             disabled={isUploading}
           />
           <Button
@@ -122,15 +139,6 @@ export default function DocumentsPage() {
           </Button>
         </div>
       </div>
-
-      {isUploading && (
-        <div className="mb-6">
-          <Progress value={uploadProgress} className="w-full" />
-          <p className="text-sm text-center mt-2">
-            上传中... {uploadProgress}%
-          </p>
-        </div>
-      )}
 
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[200px]">
