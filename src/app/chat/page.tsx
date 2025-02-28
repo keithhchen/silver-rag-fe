@@ -130,10 +130,14 @@ export default function ChatPage() {
               key={index}
               className={`flex ${
                 message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              } w-full py-2`}
             >
               <div
-                className={`max-w-[80%] text-sm ${
+                className={`${
+                  message.role === "user"
+                    ? "max-w-[80%] md:max-w-[60%] ml-auto"
+                    : "w-full md:max-w-[80%]"
+                } text-sm ${
                   message.role === "user"
                     ? "bg-primary rounded-lg text-primary-foreground p-4"
                     : "bg-transparent p-2"
