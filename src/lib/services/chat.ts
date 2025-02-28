@@ -4,6 +4,7 @@ export interface ChatMessage {
     isLoading?: boolean;
     retriever_resources?: RetrieverResource[];
     error?: boolean;
+    conversation_id?: string;
 }
 
 interface Usage {
@@ -68,6 +69,7 @@ interface ErrorEvent {
 
 interface ChatRequest {
     query: string;
+    conversation_id?: string;
 }
 
 export const streamMessages = async (request: ChatRequest, onMessage: (message: ChatMessage) => void, onError?: (error: any) => void): Promise<void> => {
@@ -133,12 +135,12 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
 
                             case 'message':
                                 const messageEvent = data as MessageEvent;
-                                console.log(messageEvent.answer)
                                 if (messageEvent.answer && messageEvent.answer.length > 0) {
                                     onMessage({
                                         content: messageEvent.answer,
                                         role: "assistant",
-                                        isLoading: false
+                                        isLoading: false,
+                                        conversation_id: messageEvent.conversation_id,
                                     });
                                 }
                                 break;

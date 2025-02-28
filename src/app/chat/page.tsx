@@ -27,6 +27,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string>();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -61,7 +62,7 @@ export default function ChatPage() {
       ]);
 
       await streamMessages(
-        { query: input },
+        { query: input, conversation_id: conversationId },
         (message) => {
           setMessages((prev) => {
             const lastMessage = prev[prev.length - 1];
@@ -72,6 +73,10 @@ export default function ChatPage() {
                 isLoading: false,
                 retriever_resources: message.retriever_resources ?? [],
               };
+              // Store conversation_id when received from message events
+              if (message.conversation_id) {
+                setConversationId(message.conversation_id);
+              }
               return [...prev.slice(0, -1), updatedMessage];
             } else {
               return [...prev, { ...message, isLoading: false }];
