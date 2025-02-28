@@ -1,8 +1,9 @@
-interface ChatMessage {
+export interface ChatMessage {
     content: string;
     role: string;
     isLoading?: boolean;
     retriever_resources?: RetrieverResource[];
+    error?: boolean;
 }
 
 interface Usage {
@@ -200,8 +201,14 @@ export const streamMessages = async (request: ChatRequest, onMessage: (message: 
         // }
     } catch (error: any) {
         if (onError) {
-            onError(error);
+            const errorResponse = {
+                status: error.status || (error instanceof Error && error.message.includes('status: ') ? parseInt(error.message.split('status: ')[1]) : 500),
+                message: error.message || 'Unknown error occurred',
+                code: error.code || 'UNKNOWN_ERROR'
+            };
+            onError(errorResponse);
+        } else {
+            throw error;
         }
-        throw error;
     }
 };

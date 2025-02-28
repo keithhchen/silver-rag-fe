@@ -20,12 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-interface Message {
-  content: string;
-  role: string;
-  isLoading?: boolean;
-  retriever_resources?: any[];
-}
+import { ChatMessage as Message } from "@/lib/services/chat";
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -86,11 +81,22 @@ export default function ChatPage() {
           });
         },
         (error) => {
-          console.error("Error:", error);
-          setMessages((prev) => [
-            ...prev,
-            { content: "An error occurred. Please try again.", role: "system" },
-          ]);
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+            if (lastMessage?.role === "assistant") {
+              // Update existing assistant message with concatenated content
+              const updatedMessage = {
+                ...lastMessage,
+                content: `${error.status}（${error.code}）服务器错误，请重试 (${
+                  error.message ?? ""
+                })`,
+                isLoading: false,
+                error: true,
+              };
+              return [...prev.slice(0, -1), updatedMessage];
+            }
+            return [...prev];
+          });
         }
       );
     } catch (error) {
@@ -109,7 +115,7 @@ export default function ChatPage() {
         }`}
       >
         {messages.length === 0 ? (
-          <div className="h-full flex items-center justify-center">
+          <div className="h-full flex items-center justify-center select-none">
             <div className="text-center text-muted-foreground">
               <h3 className="text-lg font-medium mb-2 flex items-center justify-center gap-2">
                 <Sparkles className="h-5 w-5" />
@@ -138,7 +144,11 @@ export default function ChatPage() {
                 ) : message.role === "user" ? (
                   <div className="whitespace-pre-wrap">{message.content}</div>
                 ) : (
-                  <div className="prose prose-invert max-w-none">
+                  <div
+                    className={`prose prose-invert max-w-none ${
+                      message.error ? "font-mono text-muted-foreground" : ""
+                    }`}
+                  >
                     <div className={styles.markdown}>
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {message.content}
