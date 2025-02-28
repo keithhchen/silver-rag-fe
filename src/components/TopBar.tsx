@@ -31,8 +31,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   };
 
   return (
-    <div className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 select-none">
-      <div className="container flex h-14 items-center">
+    <div className="sticky top-0 z-40 px-4 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 select-none">
+      <div className="flex h-14 items-center">
         <Button
           variant="ghost"
           className="mr-2 px-2 md:hidden"
