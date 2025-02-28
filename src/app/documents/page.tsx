@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-
+import { translate } from "@/lib/i18n";
 import { FileText, Trash2, Upload, Check } from "lucide-react";
 import { DocumentUploadResponse } from "@/lib/services/document";
 import { DocumentCard } from "@/components/DocumentCard";
@@ -47,8 +47,8 @@ export default function DocumentsPage() {
 
     if (file.type !== "application/pdf") {
       toast({
-        title: "错误",
-        description: "只支持上传 PDF 文件",
+        title: translate("documents.upload.error"),
+        description: translate("documents.error.pdfOnly"),
         variant: "destructive",
       });
       return;
@@ -57,7 +57,7 @@ export default function DocumentsPage() {
     setIsUploading(true);
     setUploadProgress(0);
     const toastResult = toast({
-      title: `上传文件：${file.name}`,
+      title: `${translate("documents.upload.title")}${file.name}`,
       description: (
         <div className="w-full">
           <Progress value={0} className="w-full" />
@@ -85,7 +85,7 @@ export default function DocumentsPage() {
       clearInterval(progressInterval);
       setUploadProgress(100);
       toastResult.update({
-        title: "上传成功",
+        title: translate("documents.upload.success"),
         description: (
           <div className="flex items-center gap-2">
             <Check className="h-4 w-4 text-green-500" />
@@ -117,7 +117,7 @@ export default function DocumentsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">文件</h1>
+        <h1 className="text-3xl font-bold">{translate("documents.title")}</h1>
         <div className="relative">
           <input
             type="file"
@@ -135,7 +135,7 @@ export default function DocumentsPage() {
             onClick={() => document.getElementById("file-upload")?.click()}
           >
             <Upload className="h-4 w-4 mr-2" />
-            上传文件
+            {translate("documents.upload.button")}
           </Button>
         </div>
       </div>

@@ -37,7 +37,7 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="p-4">
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-[20px_1fr] items-center gap-2">
           <FileText className="h-5 w-5 text-muted-foreground" />
           <CardTitle className="text-lg truncate">
             {document.filename}

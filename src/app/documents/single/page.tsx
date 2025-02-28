@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DocumentCard } from "@/components/DocumentCard";
+import { translate } from "@/lib/i18n";
 import {
   DocumentUploadResponse,
   getSingleDocument,
@@ -25,7 +26,7 @@ export default function SingleDocumentPage() {
         const difyDocumentId = searchParams.get("dify_document_id");
 
         if (!id && !gcsDocumentId && !difyDocumentId) {
-          setError("No document identifier provided");
+          setError(translate("documents.error.noId"));
           return;
         }
 
@@ -58,7 +59,9 @@ export default function SingleDocumentPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">文件详情</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        {translate("documents.title")}
+      </h1>
 
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[200px]">
@@ -71,7 +74,9 @@ export default function SingleDocumentPage() {
           <DocumentCard document={document} onDelete={handleDelete} />
         </div>
       ) : (
-        <div className="text-center text-gray-500">Document not found</div>
+        <div className="text-center text-gray-500">
+          {translate("documents.error.notFound")}
+        </div>
       )}
     </div>
   );

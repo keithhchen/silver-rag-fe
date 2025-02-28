@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { translate } from "@/lib/i18n";
 
 import { ChatMessage as Message } from "@/lib/services/chat";
 
@@ -54,7 +55,6 @@ export default function ChatPage() {
     setIsLoading(true);
 
     try {
-      // Add initial loading message
       setMessages((prev) => [
         ...prev,
         { content: "", role: "assistant", isLoading: true },
@@ -66,7 +66,6 @@ export default function ChatPage() {
           setMessages((prev) => {
             const lastMessage = prev[prev.length - 1];
             if (lastMessage?.role === "assistant") {
-              // Update existing assistant message with concatenated content
               const updatedMessage = {
                 ...lastMessage,
                 content: getUpdatedContent(lastMessage, message.content),
@@ -75,7 +74,6 @@ export default function ChatPage() {
               };
               return [...prev.slice(0, -1), updatedMessage];
             } else {
-              // Add new assistant message
               return [...prev, { ...message, isLoading: false }];
             }
           });
@@ -84,12 +82,12 @@ export default function ChatPage() {
           setMessages((prev) => {
             const lastMessage = prev[prev.length - 1];
             if (lastMessage?.role === "assistant") {
-              // Update existing assistant message with concatenated content
               const updatedMessage = {
                 ...lastMessage,
-                content: `${error.status}（${error.code}）服务器错误，请重试 (${
-                  error.message ?? ""
-                })`,
+                content: translate("chat.error.server")
+                  .replace("{status}", String(error.status))
+                  .replace("{code}", String(error.code))
+                  .replace("{message}", error.message ?? ""),
                 isLoading: false,
                 error: true,
               };
@@ -119,9 +117,9 @@ export default function ChatPage() {
             <div className="text-center text-muted-foreground">
               <h3 className="text-lg font-medium mb-2 flex items-center justify-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                开启聊天
+                {translate("chat.startChat")}
               </h3>
-              <p className="text-sm">所有回答基于海量行业知识文档</p>
+              <p className="text-sm">{translate("chat.basedOnDocs")}</p>
             </div>
           </div>
         ) : (
@@ -164,12 +162,12 @@ export default function ChatPage() {
                   message.retriever_resources?.length > 0 && (
                     <div className="mt-4">
                       <div className="text-xs font-medium text-gray-500 mb-2">
-                        引用文档
+                        {translate("chat.citedDocs")}
                       </div>
                       <Accordion type="single" collapsible className="w-full">
                         {message.retriever_resources?.map((resource, i) => (
                           <AccordionItem key={i} value={`item-${i}`}>
-                            <AccordionTrigger className="text-sm font-medium hover:no-underline">
+                            <AccordionTrigger className="truncate text-sm font-medium hover:no-underline">
                               {resource.document_name}
                             </AccordionTrigger>
                             <AccordionContent>
@@ -186,7 +184,9 @@ export default function ChatPage() {
                                       href={`/documents/single?dify_document_id=${resource.document_id}`}
                                       target="_blank"
                                     >
-                                      <span className="pr-1">前往查看</span>
+                                      <span className="pr-1">
+                                        {translate("chat.viewDoc")}
+                                      </span>
                                       <SquareArrowOutUpRight className="h-3 w-3" />
                                     </a>
                                   </Button>
@@ -213,7 +213,7 @@ export default function ChatPage() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="开始提问..."
+            placeholder={translate("chat.placeholder")}
             disabled={isLoading}
             className="flex-1 shadow-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
@@ -234,12 +234,10 @@ const getUpdatedContent = (
   lastMessage: Message,
   newContent: string | undefined
 ): string => {
-  // If the message is still loading, use the new content
   if (lastMessage.isLoading) {
     return newContent || "";
   }
 
-  // If not loading, append the new content to existing content
   const existingContent = lastMessage.content || "";
   const contentToAdd = newContent || "";
   return existingContent + contentToAdd;
