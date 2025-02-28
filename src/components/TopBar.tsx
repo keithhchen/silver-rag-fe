@@ -58,7 +58,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-fit rounded-lg px-4 flex items-center gap-2"
+                    className="relative h-8 w-fit rounded-lg px-0 flex items-center gap-2"
                   >
                     <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-primary-foreground">
                       {user.username[0].toUpperCase()}
