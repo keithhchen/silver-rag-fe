@@ -18,6 +18,8 @@ const translations = {
     "documents.upload.error": "错误",
     "documents.upload.title": "上传文件：",
     "documents.upload.success": "上传成功",
+    "documents.upload.fileSplit": "文件较大，请耐心等待",
+    "documents.upload.fileTooLarge": "文件页数较多，正在切割上传",
     "documents.error.noId": "找不到文件 ID",
     "documents.error.notFound": "找不到文件",
     "documents.pagination.prev": "上一页",

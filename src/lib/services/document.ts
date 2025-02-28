@@ -40,12 +40,12 @@ export async function getDocuments(page: number = 1, page_size: number = 10): Pr
     }
 }
 
-export async function uploadDocument(file: File): Promise<DocumentUploadResponse> {
+export async function uploadDocument(file: File): Promise<DocumentUploadResponse[]> {
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-        const response = await api.post<DocumentUploadResponse>("/documents/upload", formData, {
+        const response = await api.post<DocumentUploadResponse[]>("/documents/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

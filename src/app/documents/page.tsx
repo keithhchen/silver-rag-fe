@@ -56,6 +56,17 @@ export default function DocumentsPage() {
 
     setIsUploading(true);
     setUploadProgress(0);
+    if (file.size > 3 * 1024 * 1024) {
+      toast({
+        description: translate("documents.upload.fileTooLarge"),
+      });
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      toast({
+        description: translate("documents.upload.fileSplit"),
+      });
+    }
+
     const toastResult = toast({
       title: `${translate("documents.upload.title")}${file.name}`,
       description: (
@@ -94,6 +105,9 @@ export default function DocumentsPage() {
         ),
         duration: 1000,
       });
+      setTimeout(() => {
+        toastResult.dismiss();
+      }, 1000);
 
       // Clear the file input using ref
       if (fileInputRef.current) {
@@ -103,9 +117,10 @@ export default function DocumentsPage() {
       // Refresh the document list
       await fetchDocuments();
     } catch (error: any) {
+      const errorMessage = error.detail || error.message || "文件上传失败";
       toastResult.update({
-        title: "错误",
-        description: error.message || "文件上传失败",
+        title: translate("documents.upload.error"),
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -145,7 +160,7 @@ export default function DocumentsPage() {
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
           {documents.map((doc) => (
             <DocumentCard
               key={doc.id}
