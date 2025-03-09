@@ -42,10 +42,7 @@ api.interceptors.response.use(
                 });
                 // Redirect to login page
                 window.location.href = '/login';
-                return Promise.reject({
-                    message: 'Session expired. Please login again.',
-                    status,
-                });
+                return Promise.reject(error)
             }
 
             // Handle 400-level errors (client-side business logic errors)
@@ -54,23 +51,18 @@ api.interceptors.response.use(
                     title: "错误 " + status,
                     description: JSON.stringify(data)
                 });
-                return Promise.reject({
-                    message: data,
-                    status,
-                });
+                return Promise.reject(error)
             }
 
             // Handle 500-level errors (server-side internal errors)
             if (status >= 500) {
+                alert("toasting error")
                 toast({
                     variant: "destructive",
                     title: "服务器错误 500",
                     description: JSON.stringify(data)
                 });
-                return Promise.reject({
-                    message: data,
-                    status,
-                });
+                return Promise.reject(error)
             }
         }
 
@@ -79,10 +71,7 @@ api.interceptors.response.use(
             title: "网络错误",
             description: "请检查网络连接"
         });
-        return Promise.reject({
-            message: 'Network error. 请检查网络连接',
-            status: 0,
-        });
+        return Promise.reject(error)
     }
 );
 

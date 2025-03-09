@@ -121,8 +121,12 @@ export default function DocumentsPage() {
       toastResult.update({
         title: translate("documents.upload.error"),
         description: errorMessage,
-        variant: "destructive",
+        duration: 1000,
       });
+      toastResult.dismiss();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
