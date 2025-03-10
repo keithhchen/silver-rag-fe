@@ -114,15 +114,13 @@ export async function getSingleDocument(params: { id?: number; gcs_document_id?:
     }
 }
 
-export async function getDocumentFile(documentId: number): Promise<Blob> {
+export async function getDocumentFile(documentId: number): Promise<string> {
     try {
-        const response = await api.get(`/documents/${documentId}/file`, {
-            responseType: 'blob',
-            headers: {
-                Accept: 'application/pdf',
-            },
-        });
-        return response.data;
+        // Get the URL from the API
+        const response = await api.get<{ url: string }>(`/documents/${documentId}/file`);
+
+        // Fetch the actual file from the URL
+        return response.data.url;
     } catch (error: any) {
         if (error.response) {
             switch (error.response.status) {
@@ -142,8 +140,7 @@ export async function getDocumentFile(documentId: number): Promise<Blob> {
 
 export async function openDocumentInNewWindow(documentId: number): Promise<void> {
     try {
-        const blob = await getDocumentFile(documentId);
-        const blobUrl = URL.createObjectURL(blob);
+        const url = await getDocumentFile(documentId);
 
         // Check if the user is on a mobile device
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -151,20 +148,15 @@ export async function openDocumentInNewWindow(documentId: number): Promise<void>
         if (isMobile) {
             // For mobile devices, create a temporary link and trigger download
             const link = document.createElement('a');
-            link.href = blobUrl;
+            link.href = url;
             link.download = `document-${documentId}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         } else {
             // For desktop, open in new window
-            window.open(blobUrl, '_blank');
+            window.open(url, '_blank');
         }
-
-        // Clean up the blob URL after a short delay
-        setTimeout(() => {
-            URL.revokeObjectURL(blobUrl);
-        }, 100);
     } catch (error: any) {
         if (error.response) {
             switch (error.response.status) {
